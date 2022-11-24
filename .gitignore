@@ -1,4 +1,6 @@
-node_modules
-.env
-.tsbuildinfo
-build
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/

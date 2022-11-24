@@ -1,22 +1,25 @@
+import "reflect-metadata";
+
 import express, { Application } from "express";
 import passport from "passport";
-import Knex from "knex";
-import { Model } from "objection";
 
-import { jwtStrategy } from "./auth";
+import { jwtStrategy } from "./config/passport";
 import router from "./routers";
-import databaseConfig from "../config/database.js";
+
+import datasource from "./orm/datasource";
 
 export const app: Application = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+export const init = async () => {
+  await datasource.initialize();
 
-app.use(passport.initialize());
-passport.use("jwt", jwtStrategy);
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-app.use(router);
+  app.use(passport.initialize());
+  passport.use("jwt", jwtStrategy);
 
-const knex = Knex(databaseConfig);
+  app.use(router);
 
-Model.knex(knex);
+  return app;
+};

@@ -1,10 +1,9 @@
-import dotenv = require("dotenv");
-dotenv.config();
-
-import { app } from "./app";
+import { init } from "./app";
 
 const PORT = 8000;
 
-app.listen(PORT, () => {
-  console.log(`servidor rodando na porta ${PORT}`);
+init().then(app => {
+  app.listen(PORT, () => {
+    console.log(`servidor rodando na porta ${PORT}`);
+  });
 });
