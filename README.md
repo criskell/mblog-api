@@ -9,9 +9,9 @@ API para um backend de uma aplicação de microblogging.
 		- check-auth.ts: Middleware que checa a autenticação, atualmente via JWT.
 	- routers/: Roteadores do Express.
 	- orm/: Camada de banco de dados.
-		- migrations/: Diretório de migrations.
-		- entities/
-		- datasource.ts: Exporta um datasource do TypeORM.
+		- migrations/: Diretório de migrations executadas com a CLI do TypeORM.
+		- entities/: Diretório das entidades do TypeORM.
+		- datasource.ts: Exporta um datasource do TypeORM junto com repositórios das entidades.
 	- app.ts
 	- server.ts
 - __tests__: Testes de integração e unitário do Jest.
