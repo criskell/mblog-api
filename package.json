@@ -34,7 +34,8 @@
       "typeorm": "typeorm-ts-node-commonjs",
       "migration:revert": "env-cmd npm run typeorm migration:revert -- -d src/orm/datasource.ts",
       "migration:run": "env-cmd npm run typeorm migration:run -- -d src/orm/datasource.ts",
-      "migration:create": "cd src/orm/migrations && npm run typeorm migration:create",
+      "migration:generate": "env-cmd npm run typeorm migration:generate -- -d src/orm/datasource.ts src/orm/migrations/$npm_config_name",
+      "migration:create": "npm run typeorm migration:create src/orm/migrations/$npm_config_name",
       "start": "ts-node src/index.ts"
    },
    "repository": {
