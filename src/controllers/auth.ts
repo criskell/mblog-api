@@ -7,10 +7,6 @@ import { userRepository } from "../orm/datasource";
 export const login = async (request: Request, response: Response) => {
   const { email, password } = request.body;
 
-  if (! (email && password)) return response.status(400).json({
-    error: "Informe e-mail e senha."
-  });
-
   const user = await userRepository.findOneBy({ email });
 
   if (! user) return response.status(400).json({
@@ -33,21 +29,20 @@ export const login = async (request: Request, response: Response) => {
 export const register = async (request: Request, response: Response) => {
   const { name, email, password } = request.body;
 
-  if (! (name && email && password)) return response.status(400).json({
-    error: "Informe nome, e-mail e senha."
-  });
-
-  const emailOcurrencesCount = await userRepository.countBy({
+  const emailCount = await userRepository.countBy({
     email
   });
 
-  if (emailOcurrencesCount) return response.status(400).json({
-    error: "O e-mail não é único.",
+  if (emailCount) return response.status(400).json({
+    message: "Validation failed.",
+    errors: {
+      email: "O e-mail está ocupado.",
+    },
   });
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await userRepository.insert({
+  await userRepository.insert({
     name,
     email,
     password: hashedPassword,
