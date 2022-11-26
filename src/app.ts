@@ -29,6 +29,7 @@ export const init = async () => {
 
   // Error handling
   app.use(errorHandler.validation);
+  app.use(errorHandler.api);
 
   return app;
 };
