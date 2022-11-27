@@ -1,7 +1,7 @@
 import express from "express";
 
-import { list, create } from "../controllers/post";
-import { createPostValidation } from "../validations/post";
+import { list, show, create, update, remove } from "../controllers/post";
+import { savePostValidation } from "../validations/post";
 import checkAuth from "../middlewares/checkAuth";
 import validate from "../middlewares/validate";
 
@@ -10,6 +10,9 @@ const router = express.Router();
 router.use(checkAuth);
 
 router.get("/", list);
-router.post("/", validate(createPostValidation), create);
+router.get("/:postId", show);
+router.put("/:postId", validate(savePostValidation), update);
+router.delete("/:postId", remove);
+router.post("/", validate(savePostValidation), create);
 
 export default router;

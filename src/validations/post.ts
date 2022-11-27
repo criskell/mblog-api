@@ -1,6 +1,6 @@
 import { Joi, Segments } from "celebrate";
 
-export const createPostValidation = {
+export const savePostValidation = {
   [Segments.BODY]: {
     content: Joi.string().required(),
   },
