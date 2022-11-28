@@ -16,6 +16,12 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ManyToOne(() => Post, (post) => post.replies)
+  parent: Post;
+
+  @OneToMany(() => Post, (post) => post.parent)
+  replies: Post[];
+
   @Column("text")
   content: string;
 

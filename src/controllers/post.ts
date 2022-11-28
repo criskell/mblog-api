@@ -5,9 +5,15 @@ import { Post } from "../orm/entities/post";
 
 export const list = async (request: Request, response: Response) => {
   const posts = await postRepository.find({
+    relations: ["user"],
     select: {
       content: true,
       id: true,
+      user: {
+        id: true,
+        name: true,
+        email: true,
+      }
     }
   });
 
@@ -21,7 +27,17 @@ export const list = async (request: Request, response: Response) => {
 export const show = async (request: Request, response: Response) => {
   const id = Number(request.params.postId);
 
-  const post = await postRepository.findOneBy({ id });
+  const post = await postRepository.findOne({
+    relations: ["parent"],
+    where: {
+      id
+    },
+    select: {
+      parent: {
+        id: true
+      }
+    }
+  });
 
   if (! post) return response.status(404).end();
 
@@ -33,12 +49,25 @@ export const show = async (request: Request, response: Response) => {
 };
 
 export const create = async (request: Request, response: Response) => {
-  const { content } = request.body;
+  const { content, parentId: givenParentId } = request.body;
+
+  const parentId = Number(givenParentId) || null;
+  const parent = await postRepository.findOneBy({
+    id: parentId,
+  });
+
+  if (! parent && parentId) return response.status(400).json({
+    message: "Validation failed.",
+    errors: {
+      parentId: "Este post não existe.",
+    },
+  });
 
   const post = new Post();
 
   post.content = content;
   post.user = request.user;
+  post.parent = parent;
 
   await postRepository.save(post);
 

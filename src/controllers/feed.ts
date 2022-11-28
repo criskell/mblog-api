@@ -7,19 +7,21 @@ export const feed = async (request: Request, response: Response) => {
   const postsPerPage = 5;
 
   const [posts, total] = await postRepository.createQueryBuilder("post")
-    .innerJoinAndSelect("post.user", "user")
-    .innerJoin(
+    .innerJoin("post.user", "user")
+    .leftJoinAndSelect("post.parent", "parent")
+    .leftJoin(
       "user.followers",
       "follower",
       "follower.id = :userId",
       { userId: request.user.id }
     )
+    .where("follower.id = :userId OR user.id = :userId")
     .loadRelationCountAndMap("post.likeCount", "post.likes")
+    .loadRelationCountAndMap("post.replyCount", "post.replies")
     .select(["post"])
-    .addSelect(["user.name", "user.email", "user.id"])
+    .addSelect(["user.name", "user.email", "user.id", "parent.id"])
     .orderBy("post.createdAt", "DESC")
     .skip(page * postsPerPage)
-    .take(postsPerPage)
     .getManyAndCount();
 
   const totalPages = Math.ceil(total / postsPerPage);
