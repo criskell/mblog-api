@@ -4,34 +4,23 @@ import { userRepository, postRepository } from "../orm/datasource";
 
 export const feed = async (request: Request, response: Response) => {
   const page = Number(request.query.page) || 0;
-  const postsPerPage = 50;
+  const postsPerPage = 5;
 
-  const [posts, total] = await postRepository.findAndCount({
-    take: postsPerPage,
-    skip: page * postsPerPage,
-    relations: ["user"],
-    where: {
-      user: {
-        followers: {
-          id: request.user.id,
-        }
-      }
-    },
-    select: {
-      id: true,
-      content: true,
-      createdAt: true,
-      updatedAt: true,
-      user: {
-        id: true,
-        name: true,
-        email: true,
-      },
-    },
-    order: {
-      createdAt: "DESC"
-    }
-  });
+  const [posts, total] = await postRepository.createQueryBuilder("post")
+    .innerJoinAndSelect("post.user", "user")
+    .innerJoin(
+      "user.followers",
+      "follower",
+      "follower.id = :userId",
+      { userId: request.user.id }
+    )
+    .loadRelationCountAndMap("post.likeCount", "post.likes")
+    .select(["post"])
+    .addSelect(["user.name", "user.email", "user.id"])
+    .orderBy("post.createdAt", "DESC")
+    .skip(page * postsPerPage)
+    .take(postsPerPage)
+    .getManyAndCount();
 
   const totalPages = Math.ceil(total / postsPerPage);
   const nextPage = page + 1 >= totalPages ? null : page + 1;

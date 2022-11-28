@@ -4,10 +4,12 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne
+  ManyToOne,
+  OneToMany
 } from "typeorm";
 
 import { User } from "./user";
+import { PostLike } from "./postLike";
 
 @Entity("posts")
 export class Post {
@@ -19,6 +21,9 @@ export class Post {
 
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
+
+  @OneToMany(() => PostLike, (like) => like.post)
+  likes: PostLike[];
 
   @CreateDateColumn()
   createdAt: Date;
