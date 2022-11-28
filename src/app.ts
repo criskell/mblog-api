@@ -2,7 +2,6 @@ import "reflect-metadata";
 
 import express, { Application } from "express";
 import passport from "passport";
-import { errors } from "celebrate";
 
 import { jwtStrategy } from "./config/passport";
 import router from "./routers";

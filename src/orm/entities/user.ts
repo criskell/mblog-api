@@ -4,7 +4,7 @@ import {
   Column,
   OneToMany,
   ManyToMany,
-  JoinTable
+  JoinTable,
 } from "typeorm";
 
 import { Post } from "./post";

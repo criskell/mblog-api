@@ -1,4 +1,4 @@
-import { celebrator, Modes } from "celebrate";
+import { celebrator } from "celebrate";
 
 const celebrateOptions = {};
 const joiOptions = {

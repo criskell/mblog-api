@@ -3,17 +3,22 @@ import { isCelebrateError } from "celebrate";
 
 import { APIError } from "../errors/api";
 
-export const validation = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (! (isCelebrateError(err) && err.details.has("body"))) return next(err);
+export const validation = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!(isCelebrateError(err) && err.details.has("body"))) return next(err);
 
   const validationError = err.details.get("body");
 
   const errors = validationError.details.reduce((groupedErrors, error) => {
-      const group = error.path.join(".");
-      
-      groupedErrors[group] ||= error.message;
+    const group = error.path.join(".");
 
-      return groupedErrors;
+    groupedErrors[group] ||= error.message;
+
+    return groupedErrors;
   }, {});
 
   res.status(400).json({
@@ -22,8 +27,13 @@ export const validation = (err: Error, req: Request, res: Response, next: NextFu
   });
 };
 
-export const api = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  if (! (err instanceof APIError)) return next(err);
+export const api = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!(err instanceof APIError)) return next(err);
 
   res.status(err.statusCode).json({
     message: err.message,

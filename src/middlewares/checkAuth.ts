@@ -3,7 +3,8 @@ import passport from "passport";
 
 import { APIError } from "../errors/api";
 
-const handleAuthResponse = (req: Request, res: Response, next: NextFunction) =>
+const handleAuthResponse =
+  (req: Request, res: Response, next: NextFunction) =>
   async (err, user, info) => {
     if (err || info || !user) {
       next(new APIError(403, "Unauthorized."));
@@ -16,7 +17,7 @@ const middleware = (req: Request, res: Response, next: NextFunction) =>
   passport.authenticate(
     "jwt",
     { session: false },
-    handleAuthResponse(req, res, next),
+    handleAuthResponse(req, res, next)
   )(req, res, next);
 
 export default middleware;

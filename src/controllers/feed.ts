@@ -1,20 +1,18 @@
 import { Request, Response } from "express";
 
-import { userRepository, postRepository } from "../orm/datasource";
+import { postRepository } from "../orm/datasource";
 
 export const feed = async (request: Request, response: Response) => {
   const page = Number(request.query.page) || 0;
   const postsPerPage = 5;
 
-  const [posts, total] = await postRepository.createQueryBuilder("post")
+  const [posts, total] = await postRepository
+    .createQueryBuilder("post")
     .innerJoin("post.user", "user")
     .leftJoinAndSelect("post.parent", "parent")
-    .leftJoin(
-      "user.followers",
-      "follower",
-      "follower.id = :userId",
-      { userId: request.user.id }
-    )
+    .leftJoin("user.followers", "follower", "follower.id = :userId", {
+      userId: request.user.id,
+    })
     .where("follower.id = :userId OR user.id = :userId")
     .loadRelationCountAndMap("post.likeCount", "post.likes")
     .loadRelationCountAndMap("post.replyCount", "post.replies")
@@ -34,6 +32,6 @@ export const feed = async (request: Request, response: Response) => {
     pagination: {
       totalPages,
       nextPage,
-    }
+    },
   });
 };

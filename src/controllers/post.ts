@@ -13,14 +13,14 @@ export const list = async (request: Request, response: Response) => {
         id: true,
         name: true,
         email: true,
-      }
-    }
+      },
+    },
   });
 
   response.send({
     data: {
-      posts
-    }
+      posts,
+    },
   });
 };
 
@@ -30,21 +30,21 @@ export const show = async (request: Request, response: Response) => {
   const post = await postRepository.findOne({
     relations: ["parent"],
     where: {
-      id
+      id,
     },
     select: {
       parent: {
-        id: true
-      }
-    }
+        id: true,
+      },
+    },
   });
 
-  if (! post) return response.status(404).end();
+  if (!post) return response.status(404).end();
 
   response.send({
     data: {
-      post
-    }
+      post,
+    },
   });
 };
 
@@ -56,12 +56,13 @@ export const create = async (request: Request, response: Response) => {
     id: parentId,
   });
 
-  if (! parent && parentId) return response.status(400).json({
-    message: "Validation failed.",
-    errors: {
-      parentId: "Este post não existe.",
-    },
-  });
+  if (!parent && parentId)
+    return response.status(400).json({
+      message: "Validation failed.",
+      errors: {
+        parentId: "Este post não existe.",
+      },
+    });
 
   const post = new Post();
 
@@ -90,7 +91,7 @@ export const update = async (request: Request, response: Response) => {
     },
   });
 
-  if (! post) return response.status(404).end();
+  if (!post) return response.status(404).end();
   if (post.user.id !== request.user.id) return response.status(403).end();
 
   const { content } = request.body;
@@ -111,7 +112,7 @@ export const remove = async (request: Request, response: Response) => {
     },
   });
 
-  if (! post) return response.status(404).end();
+  if (!post) return response.status(404).end();
   if (post.user.id !== request.user.id) return response.status(403).end();
 
   await postRepository.remove(post);

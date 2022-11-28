@@ -11,7 +11,7 @@ export const jwtVerify = async (payload, done) => {
   try {
     const user = await userRepository.findOneBy({ id: payload.sub });
 
-    if (! user) return done(null, false);
+    if (!user) return done(null, false);
 
     done(null, user);
   } catch (error) {
