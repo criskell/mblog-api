@@ -11,7 +11,9 @@ export const login = async (request: Request, response: Response) => {
 
   if (!user)
     return response.status(400).json({
-      message: "Nenhum usuário encontrado para este e-mail.",
+      errors: {
+        email: "Nenhum usuário encontrado para este e-mail."
+      },
     });
 
   const validPassword = await bcrypt.compare(password, user.password);
@@ -39,7 +41,6 @@ export const register = async (request: Request, response: Response) => {
 
   if (emailCount)
     return response.status(400).json({
-      message: "Validation failed.",
       errors: {
         email: "O e-mail está ocupado.",
       },
