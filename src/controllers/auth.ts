@@ -11,20 +11,22 @@ export const login = async (request: Request, response: Response) => {
 
   if (!user)
     return response.status(400).json({
-      error: "Nenhum usuário encontrado para este e-mail.",
+      message: "Nenhum usuário encontrado para este e-mail.",
     });
 
   const validPassword = await bcrypt.compare(password, user.password);
 
   if (!validPassword)
-    return response.status(400).json({
-      error: "Senha inválida.",
+    return response.status(403).json({
+      message: "Senha inválida.",
     });
 
   const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET);
 
   response.json({
-    token: `Bearer ${token}`,
+    data: {
+      token: `Bearer ${token}`,
+    },
   });
 };
 

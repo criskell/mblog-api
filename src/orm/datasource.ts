@@ -11,4 +11,13 @@ export const userRepository = datasource.getRepository(User);
 export const postRepository = datasource.getRepository(Post);
 export const postLikeRepository = datasource.getRepository(PostLike);
 
+export const clear = async () => {
+  await Promise.all(
+    datasource.entityMetadatas
+      .map(({ name, tableName }) => {
+        datasource.getRepository(name).query(`DELETE FROM ${tableName}`)
+      })
+  );
+};
+
 export default datasource;
