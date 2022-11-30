@@ -27,11 +27,11 @@ export class User {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToMany(() => User, (user) => user.following)
+  @ManyToMany(() => User, (user) => user.following, { onDelete: "SET NULL" })
   @JoinTable()
   followers: User[];
 
-  @ManyToMany(() => User, (user) => user.followers)
+  @ManyToMany(() => User, (user) => user.followers, { onDelete: "SET NULL" })
   following: User[];
 
   @OneToMany(() => PostLike, (like) => like.liker)

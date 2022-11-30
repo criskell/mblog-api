@@ -16,7 +16,9 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Post, (post) => post.replies)
+  @ManyToOne(() => Post, (post) => post.replies, {
+    onDelete: "CASCADE"
+  })
   parent: Post;
 
   @OneToMany(() => Post, (post) => post.parent)
@@ -25,7 +27,9 @@ export class Post {
   @Column("text")
   content: string;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, {
+    onDelete: "CASCADE"
+  })
   user: User;
 
   @OneToMany(() => PostLike, (like) => like.post)

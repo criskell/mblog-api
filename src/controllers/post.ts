@@ -28,7 +28,7 @@ export const show = async (request: Request, response: Response) => {
   const id = Number(request.params.postId);
 
   const post = await postRepository.findOne({
-    relations: ["parent"],
+    relations: ["parent", "user"],
     where: {
       id,
     },
@@ -36,6 +36,11 @@ export const show = async (request: Request, response: Response) => {
       parent: {
         id: true,
       },
+      user: {
+        name: true,
+        email: true,
+        id: true,
+      }
     },
   });
 
@@ -72,7 +77,7 @@ export const create = async (request: Request, response: Response) => {
 
   await postRepository.save(post);
 
-  response.send({
+  response.status(201).send({
     data: {
       post: {
         id: post.id,

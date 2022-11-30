@@ -15,7 +15,7 @@ export const clear = async () => {
   await Promise.all(
     datasource.entityMetadatas
       .map(({ name, tableName }) => {
-        datasource.getRepository(name).query(`DELETE FROM ${tableName}`)
+        return datasource.getRepository(name).query(`TRUNCATE ${tableName} CASCADE`);
       })
   );
 };

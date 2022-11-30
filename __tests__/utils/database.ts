@@ -4,9 +4,10 @@ export const setupTestDatabase = () => {
   beforeAll(async () => {
     await datasource.initialize();
     await datasource.runMigrations();
+    await clear();
   });
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await clear();
   });
 
